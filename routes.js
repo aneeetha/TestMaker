@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Question = require("./models/Question");
+
 var check = 0;
 var score = 0;
+
 //get all questions
 router.get("/questions", async(req, res) => {
     try{
@@ -10,7 +12,6 @@ router.get("/questions", async(req, res) => {
         if(questions){
             check = 0
             score = 0
-            console.log(questions[0]._id)
             return res.redirect("/question")
         }else{
             return res.status(404).json({});
@@ -35,18 +36,21 @@ router.post("/score", async(req, res) => {
         const questions = await Question.find()
         const id = req.body.btn
         for(var i=0; i<4; i++){
-            if(questions[check].alternatives[i]._id == id){
+            if(questions[check].alternatives[i]._id == id)
+            {
                 if(questions[check].alternatives[i].isCorrect){
                     score++;
                 }
                 break;
             }
         }
-        console.log(score)
+        console.log(questions)
         ++check;
         if(check==questions.length){
-            res.send("<h1>your score is {%- score %}</h2>");
+            console.log(id)
+            res.send("your score is " + score);
         }else{
+            console.log(id)
             res.redirect("/question")
         }
     }catch(error){
@@ -55,10 +59,6 @@ router.post("/score", async(req, res) => {
     
 
 })
-
-
-
-
 
 
 //get one question
